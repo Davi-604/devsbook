@@ -1,4 +1,4 @@
 composer.phar
 /vendor/
 .DS_Store
-C:\xampp\htdocs\php\devsbook\src\Config.php
+src/Config.php
