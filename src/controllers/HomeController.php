@@ -1,20 +1,33 @@
 <?php
+
 namespace src\controllers;
 
 use \core\Controller;
+use \src\services\LoginService;
+use \src\services\PostService;
 
-class HomeController extends Controller {
+class HomeController extends Controller
+{
+    private $user;
 
-    public function index() {
-        $this->render('home', ['nome' => 'Bonieky']);
+    public function __construct()
+    {
+        $this->user = LoginService::checkLogin();
+        if ($this->user === false) {
+            $this->redirect('/singin');
+        }
     }
 
-    public function sobre() {
-        $this->render('sobre');
-    }
+    public function index()
+    {
+        $page = intval(filter_input(INPUT_GET, 'page'));
 
-    public function sobreP($args) {
-        print_r($args);
-    }
+        $feed = PostService::getHomeFeed($this->user->getId(), $page);
 
+        $this->render('home', [
+            'user' => $this->user,
+            'feed' => $feed,
+            'currentPage' => $page
+        ]);
+    }
 }
